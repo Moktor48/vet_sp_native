@@ -1,0 +1,45 @@
+To make prisma work, I need to be able to remote connect to my databases!
+
+This means:
+1) The app must route the request to my server
+2) NGINX will be set up to send the request out
+3) perhaps add prisma or some middleman ... oh, express? Oh... I need to be able to connect a prisma request otherwise it is back to SQL?
+4) Possible workflow:
+    1) Request made to a root:/subdir
+    2) Forward to express server
+    3) Redirects with internal permissions, maybe with a header check to maintain security
+    4) Request forwarded, response returned
+
+Even better:
+1) App sends a trigger request to home
+2) NGINX forwards to express
+3) Express completes queries... 
+4) Can I simply connect my app to a web app that exists in order to let it do it's functions as a proxy?
+
+First task: send a request to the server and get data returned 
+1) Express makes the request and returns the response 
+2) Therefore, the app just needs to send a secure request that tells express what to do 
+
+
+After all that:
+1) Run prisma in express
+2) Have app do a simple fetch to the API
+3) ??
+4) Profit!
+
+Generic type props
+
+Generic component/child:
+
+export default function ApiCall<T>({
+  api,
+  key,
+  setData,
+  setLoading,
+}: ApiCallProps<T>)
+
+Specific component/parent:
+
+const [data, setData] = useState<TestData>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  ApiCall<TestData>({ api: "GET", key: "testdata", setData, setLoading });

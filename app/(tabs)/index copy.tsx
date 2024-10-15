@@ -4,12 +4,21 @@ import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { Ionicons } from "@expo/vector-icons";
 import { ThemedView } from "@/components/ThemedView";
 import type { TestData } from "@/components/types/extraTypes";
-import ApiCall from "@/components/api/ApiCall";
 export default function HomeScreen() {
-  // Don't lose this block!
   const [data, setData] = useState<TestData>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  ApiCall<TestData>({ api: "GET", key: "testdata", setData, setLoading });
+  useEffect(() => {
+    fetch("https://learn2veteran.moktor.com/api/GET/testdata")
+      .then((res) => res.json())
+      .then((data: TestData) => {
+        setData(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      });
+  }, []);
   let rendered: string[] = [];
   if (loading) {
     rendered.push("Loading...");
@@ -18,7 +27,7 @@ export default function HomeScreen() {
   } else {
     data.map((dat) => rendered.push(dat.name));
   }
-  //^^ This block is necessary for API calls
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
