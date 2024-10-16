@@ -43,3 +43,29 @@ Specific component/parent:
 const [data, setData] = useState<TestData>([]);
   const [loading, setLoading] = useState<boolean>(true);
   ApiCall<TestData>({ api: "GET", key: "testdata", setData, setLoading });
+
+  AUTH PROCESS:
+  1) Oauth process for app
+  **Connects database data from webapp
+  **Should link User table
+
+  AUTH/URI programming steps
+  1) New table to store oauth providers
+  2) Read/Write will be done using bcrypt due to sensitivty of data
+  3) mobapp will send the request to express on oauth attempt, pull data, send data, import data to mobapp to complete authentication
+  4) This means decryption should occur on the app when it plugs the data into authConfig.ts 
+
+  Login => Oauth => Select provider => api request from express for provider info => query prisma => return => decrypt data => plug data into authConfig to continue the process
+  Secondary considerations: 
+  1) Do I need a key on mobapp to decrypt, or do I decrypt data BEFORE sending
+  2) App built on next app to encrypt initial data
+  3) What header/encryption do I have to ensure the mobapp isn't compromised, especially before auth kicks in
+
+  prisma provider query info
+  model providers {
+    id           String   @id @default(cuid())
+    name         String   @unique // Name of the provider, Linkedin/google/etc
+    clientId     String //This data should be encrypted
+    clientDomain String //This data should be encrypted
+    clientSecret String //This data should be encrypted
+}

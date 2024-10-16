@@ -13,3 +13,11 @@ export type ApiCallProps<T> = {
   setData: React.Dispatch<React.SetStateAction<T>>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
+
+export type LinkedinData = {
+  id: string;
+  name: string;
+  clientId: string;
+  clientDomain: string;
+  clientSecret: string;
+} | null;

@@ -1,11 +1,22 @@
-import { Image, StyleSheet, Platform, View, Text } from "react-native";
-import { useEffect, useState } from "react";
+import { Image, StyleSheet, Platform, View, Text, Button } from "react-native";
+import { useState } from "react";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { Ionicons } from "@expo/vector-icons";
 import { ThemedView } from "@/components/ThemedView";
 import type { TestData } from "@/components/types/extraTypes";
 import ApiCall from "@/components/api/ApiCall";
+import { AuthProvider, useAuth } from "@/components/auth/AuthProvider";
+
 export default function HomeScreen() {
+  return (
+    <AuthProvider>
+      <Main />
+    </AuthProvider>
+  );
+}
+
+const Main = () => {
+  const { user, login } = useAuth();
   // Don't lose this block!
   const [data, setData] = useState<TestData>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -26,16 +37,23 @@ export default function HomeScreen() {
         <Ionicons size={310} name="code-slash" style={styles.headerImage} />
       }
     >
-      <ThemedView>
-        {rendered.map((item, index) => (
-          <Text style={styles.textWhite} key={index}>
-            {item}
-          </Text>
-        ))}
-      </ThemedView>
+      {user ? (
+        <ThemedView>
+          {rendered.map((item, index) => (
+            <Text style={styles.textWhite} key={index}>
+              {item}
+            </Text>
+          ))}
+        </ThemedView>
+      ) : (
+        <View>
+          <Text style={styles.textWhite}>You are not logged in</Text>
+          <Button title="Login" onPress={login} />
+        </View>
+      )}
     </ParallaxScrollView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   textWhite: {
